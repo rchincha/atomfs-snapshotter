@@ -1,12 +1,14 @@
 module machinerun.io/atomfs-snapshotter
 
-go 1.22.7
-
-toolchain go1.22.9
+go 1.23
 
 require (
+	github.com/containerd/containerd v1.7.23
 	github.com/containerd/containerd/api v1.8.0
 	github.com/containerd/containerd/v2 v2.0.0
+	github.com/containerd/continuity v0.4.4
+	github.com/containerd/log v0.1.0
+	github.com/containerd/plugin v1.0.0
 	google.golang.org/grpc v1.68.0
 )
 
@@ -14,10 +16,8 @@ require (
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/Microsoft/hcsshim v0.12.9 // indirect
 	github.com/containerd/cgroups/v3 v3.0.3 // indirect
-	github.com/containerd/continuity v0.4.4 // indirect
 	github.com/containerd/errdefs v1.0.0 // indirect
 	github.com/containerd/errdefs/pkg v0.3.0 // indirect
-	github.com/containerd/log v0.1.0 // indirect
 	github.com/containerd/ttrpc v1.2.6 // indirect
 	github.com/containerd/typeurl/v2 v2.2.2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect

@@ -27,3 +27,13 @@ address = "/run/atomfs-snapshotter-grpc/atomfs-snapshotter-grpc.sock"
   # tells containerd to use atomfs by default.
   snapshotter = "atomfs"
 ```
+
+## Run/test snapshotter
+
+```
+bin/atomfs-snapshotter-grpc /run/atomfs-snapshotter-grpc/atomfs-snapshotter-grpc.sock /tmp/atomfs/
+
+sudo containerd -c tests/containerd.toml
+
+hack/tools/bin/nerdctl --snapshotter atomfs run public.ecr.aws/docker/library/busybox:stable
+```

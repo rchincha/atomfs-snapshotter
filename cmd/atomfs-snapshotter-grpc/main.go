@@ -9,7 +9,7 @@ import (
 
 	snapshotsapi "github.com/containerd/containerd/api/services/snapshots/v1"
 	"github.com/containerd/containerd/v2/contrib/snapshotservice"
-	"github.com/containerd/containerd/v2/plugins/snapshots/native"
+	"machinerun.io/atomfs-snapshotter/snapshot"
 )
 
 func main() {
@@ -28,7 +28,7 @@ func main() {
 	// snapshotter and a root directory. Your custom snapshotter will be
 	// much more useful than using a snapshotter which is already included.
 	// https://godoc.org/github.com/containerd/containerd/snapshots#Snapshotter
-	sn, err := native.NewSnapshotter(os.Args[2])
+	sn, err := snapshot.NewSnapshotter(os.Args[2])
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
 		os.Exit(1)
@@ -40,6 +40,10 @@ func main() {
 
 	// Register the service with the gRPC server
 	snapshotsapi.RegisterSnapshotsServer(rpc, service)
+
+	if _, err := os.Lstat(os.Args[1]); err == nil {
+		os.Remove(os.Args[1])
+	}
 
 	// Listen and serve
 	l, err := net.Listen("unix", os.Args[1])

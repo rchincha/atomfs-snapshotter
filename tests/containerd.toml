@@ -1,0 +1,23 @@
+version = 3
+[plugins.'io.containerd.cri.v1.runtime'.containerd.runtimes.runc.options]
+  SystemdCgroup = true
+[plugins.'io.containerd.cri.v1.images']
+  snapshotter = "overlayfs"
+[proxy_plugins]
+    [proxy_plugins.atomfs]
+    # tells containerd that the atomfs plugin is a snapshotter and implements the snapshotter API
+    type = "snapshot"
+    # tells containerd where to connect to the atomfs snapshotter
+    address = "/run/atomfs-snapshotter-grpc/atomfs-snapshotter-grpc.sock"
+    [proxy_plugins.atomfs.exports]
+    # defines the root data directory for the atomfs snapshotter. Kubernetes uses
+    # this to calculate disk utilization, enforce storage limits, and trigger
+    # garbage collection.
+    root = "/var/lib/atomfs-snapshotter-grpc"
+
+[plugins."io.containerd.grpc.v1.cri".containerd]
+  # tells containerd to use atomfs by default.
+  snapshotter = "atomfs"
+
+[plugins."io.containerd.cri.v1.images".registry]
+  config_path = "tests/certs.d"

@@ -26,7 +26,14 @@ ifneq ($(STATIC),)
 endif
 GO_LD_FLAGS+='
 
-.PHONY: all build clean
+# helper tools
+TOOLSDIR := $(shell pwd)/hack/tools
+NERDCTL :=  $(TOOLSDIR)/bin/nerdctl
+NERDCTL_VERSION := 2.0.0
+CONTAINERD := $(TOOLSDIR)/bin/containerd
+CONTAINERD_VERSION := 2.0.0
+
+.PHONY: all build clean tools
 
 all: build
 
@@ -39,3 +46,20 @@ atomfs-snapshotter-grpc:
 
 clean:
 	rm -rf $(OUTDIR)
+
+# tools
+tools: $(NERDCTL) $(CONTAINERD)
+
+$(NERDCTL):
+	mkdir -p $(TOOLSDIR)/bin
+	curl -Lo nerdctl.tar.gz https://github.com/containerd/nerdctl/releases/download/v$(NERDCTL_VERSION)/nerdctl-$(NERDCTL_VERSION)-$(OS)-$(ARCH).tar.gz
+	tar xvzf nerdctl.tar.gz -C $(TOOLSDIR)/bin nerdctl
+	rm nerdctl.tar.gz
+
+$(CONTAINERD):
+	mkdir -p $(TOOLSDIR)/bin
+	curl -Lo containerd.tar.gz https://github.com/containerd/containerd/releases/download/v$(CONTAINERD_VERSION)/containerd-$(CONTAINERD_VERSION)-$(OS)-$(ARCH).tar.gz
+	tar xvzf containerd.tar.gz -C $(TOOLSDIR)/bin --strip-components=1 bin/containerd
+	tar xvzf containerd.tar.gz -C $(TOOLSDIR)/bin --strip-components=1 bin/ctr
+	rm containerd.tar.gz
+
